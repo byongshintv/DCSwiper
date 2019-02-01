@@ -250,6 +250,12 @@ class BodyGUI{
 const bodyGUI = new BodyGUI();
 
 class OtherGUI{
+    public printExportData(dbData: DBData): void {
+        const textData:string = JSON.stringify(dbData);        
+        $("#exportData").html(textData)
+
+    }
+
     private $refreshInterval = $("#refreshInterval")
     private $removeLimitCount = $("#removeLimitCount")
     constructor(){
@@ -333,6 +339,26 @@ class OtherGUI{
 
 
 }
+
+class ChromeStorageBridge{
+    set(dbData:DBData, galleryID:string, callback:() => void = () => {}){
+        const debugID = "id : " + Math.floor(Math.random() * 50000)
+
+        logger.debug("데이터 저장 시도",debugID,dbData,galleryID)
+        chrome.storage.sync.set({["Swiper_"+ galleryID]:dbData},() => {
+            logger.debug("데이터 저장 성공",debugID)
+            callback()
+    
+        });
+    }
+
+    load(galleryID:string, callback: () => void ){
+
+    }
+}
+
+const chromeStorageBridge = new ChromeStorageBridge()
+
 const otherGUI = new OtherGUI();
 const logger = Logger
 logger.useDefaults({
@@ -355,22 +381,18 @@ function getDefaultData():DBData{
 
 let isEnableSave = true
 function saveData(){
+    // loadData 함수 실행중일경우 종료
     if(!isEnableSave) return
     const dbData:DBData = {
         dbs:bodyGUI.toJSON(),
         setting:otherGUI.getSettingJSON(),
         version:0.5
     };
-
-    const galleryID = $("#search").val();
+    otherGUI.printExportData(dbData)
     
-    const debugID = "id : " + Math.floor(Math.random() * 50000)
-    logger.debug("데이터 저장 시도",debugID,dbData,galleryID)
+    const galleryID: string = $("#search").val() as string;
+    chromeStorageBridge.set(dbData,galleryID)
 
-    chrome.storage.sync.set({["Swiper_"+ galleryID]:dbData},() => {
-        logger.debug("데이터 저장 성공",debugID)
-
-    });
 }
 
 // 노드 추가

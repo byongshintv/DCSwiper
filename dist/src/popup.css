@@ -11,6 +11,10 @@ body{
     font-size:0.8rem;
 }
 
+main .nav-wrapper{
+    background-color: rgb(48, 63, 159);
+}
+
 .hide{
     display:none!important;
 }
@@ -86,6 +90,16 @@ body{
 
 .sidenav input[type=range]+.thumb.active .value{
     margin-top: -8px;
+}
+
+.sidenav .absolute-btn-wrapper{
+    right: 1em;
+    top: 1.5em;
+    position: absolute;
+}
+
+.sidenav textarea + label:not(.active){
+    top:-1em;
 }
 
 #addNode{

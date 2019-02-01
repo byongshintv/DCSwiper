@@ -39,8 +39,26 @@ html(lang='en')
             a.collapsible-header.waves-effect.waves-teal 삭제로그(개발중)
           li.bold
             a.collapsible-header.waves-effect.waves-teal 설정 불러오기(개발중)
+            .collapsible-body
+              .row
+                .absolute-btn-wrapper
+                  a.waves-effect.waves-light.btn
+                    i.material-icons.left save
+                    | 저장
+                .col.s12.input-field
+                  textarea#importData.materialize-textarea
+                  label(for="importData") 내보내기에서 복사한 코드를 붙여넣어주세요
           li.bold
             a.collapsible-header.waves-effect.waves-teal 설정 내보내기(개발중)
+            .collapsible-body
+              .row
+                .absolute-btn-wrapper
+                  a.waves-effect.waves-light.btn
+                    i.material-icons.left content_copy
+                    | 복사
+                .col.s12.input-field
+                  textarea#exportData.materialize-textarea
+                  label(for="exportData") 데이터 방출 코드
     main
       nav
         .nav-wrapper
