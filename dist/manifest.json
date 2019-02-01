@@ -1,8 +1,11 @@
 {
     "manifest_version": 2,
     "name": "DCSwiper",
-    "version": "0.2",
-    "description": "중갤 돌갤 완장용 청소기",
+    "version": "0.5.1",
+    "description": "디씨인싸이드 마이너갤러리 주딱 파딱용 오함마",
+    "default_locale": "ko",
+    "author": "병신TV",
+    "short_name":"디씨 스위퍼",
     "content_scripts": [
         {
             "matches": ["http://gall.dcinside.com/*"],
