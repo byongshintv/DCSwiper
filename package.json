@@ -1,0 +1,36 @@
+{
+  "name": "DCSwiper",
+  "version": "0.0.1",
+  "description": "파딱용 디씨글 정리툴",
+  "main": "src/main.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chrome": "^0.0.69",
+    "@types/jquery": "^3.3.5",
+    "@types/materialize-css": "^1.0.6",
+    "ember-cli-materialize": "^0.22.0",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "pug-html-loader": "^1.1.5",
+    "raw-loader": "^1.0.0",
+    "ts-loader": "^5.3.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-command": "^0.4.1"
+  },
+  "dependencies": {
+    "@types/jqueryui": "^1.12.6",
+    "@types/nouislider": "^9.0.4",
+    "@types/wnumb": "^1.0.28",
+    "jquery": "^3.3.1",
+    "logger": "^0.0.1",
+    "materialize-css": "^1.0.0-rc.2",
+    "nouislider": "^12.1.0",
+    "typescript": "^3.2.2",
+    "webpack": "^4.28.1",
+    "wnumb": "^1.1.0"
+  },
+  "scripts": {
+    "dev": "webpack --watch --mode development",
+    "build": "webpack --mode production"
+  }
+}

@@ -1,0 +1,120 @@
+doctype html
+html(lang='en')
+  head
+    link(rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons')
+    link(rel='stylesheet', href='src/nouislider.min.css')    
+    link(rel='stylesheet', href='src/materialize.min.css')
+    link(rel='stylesheet', href='src/popup.css')    
+
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(http-equiv='X-UA-Compatible', content='ie=edge')
+    title 필터 편집
+  body
+    header
+      ul#sideNav.sidenav
+        ul.collapsible.collapsible-accordion
+          li.bold.active
+            a.collapsible-header.waves-effect.waves-teal 설정
+            .collapsible-body
+              ul
+                li 
+                  a 
+                    i.icon.fa.fa-refresh
+                    span#refreshIntervalDescript 자동 새로고침 해제
+                  .range-field
+                    input(type="range" id="refreshInterval" min="0" max="1000" step="0")
+                li 
+                  a 
+                    i.icon.fa.fa-refresh
+                    span#removeLimitCountDescript 최대 삭제갯수 제한 해제
+                  .range-field
+                    input(type="range" id="removeLimitCount" min="0" max="30" step="0")
+          li.bold
+            a.collapsible-header.waves-effect.waves-teal 사용설명
+            .collapsible-body
+              p 검색창에 검열할 갤러리 id를 입력해라 (예 중갤=aoegame, 돌갤=pebble)
+          li.bold
+            a.collapsible-header.waves-effect.waves-teal 삭제로그(개발중)
+          li.bold
+            a.collapsible-header.waves-effect.waves-teal 설정 불러오기(개발중)
+          li.bold
+            a.collapsible-header.waves-effect.waves-teal 설정 내보내기(개발중)
+    main
+      nav
+        .nav-wrapper
+          .input-field
+            input#search(type="search" required="" placeholder="갤러리 ID를 입력 해 주세요")
+            label.label-icon(for="search")
+              i.material-icons search
+            i.material-icons close
+          a.sidenav-trigger.btn-floating.btn-large.halfway-fab.waves-effect.waves-light.teal(href="#" data-target="sideNav")
+            i.material-icons menu
+      .message.hide
+      .setting.container.modern-ul
+      #wrap
+        .container.addNodeItem
+          button#addNode
+            i.fa.fa-plus-square
+              |                 	새로운 노드 추가...
+        #filterList.container
+          .hide.card.filterItem
+            .card-image.titleWrap
+              img(src="https://materializecss.com/images/sample-1.jpg")
+              span.card-title #000 
+              a.btn-floating.halfway-fab.wave-effect.wave-light.red.removeNode
+                i.material-icons remove
+            .card-content
+                h4.header 필터
+                .conditionList.section
+                .behaiveWrap.section
+                  h4.header 조치
+                  .row.caption
+                    .col.s6.switch
+                      label.removeWrap
+                        | 글 삭제
+                        input.isRemove(type="checkbox")
+                        span.lever
+                    .col.s6.switch
+                      label.blockWrap
+                        | 작성자 차단
+                        input.isBlock(type="checkbox")
+                        span.lever
+                    .blockDetailWrap.row(style="display:none")
+                      .col.s3.input-field
+                          select.length
+                            option(value='1' select)  1시간
+                            option(value='6')  6시간
+                            option(value='24')  24시간
+                            option(value='72')  72시간
+                          label 차단 길이
+                      .col.s9.input-field
+                        input.reason.validate(type="text" placeholder="차단 사유")
+                        label 차단 사유
+      #forClone.hide
+        .condition.row
+          .col.s3.input-field
+            select.target
+              option(value='0' select) 닉네임
+              option(value='1') 아이피
+              option(value='2') 제목
+              option(value='3') 아이디
+            label 검열기준
+          .col.s6.input-field
+            input.validate.test(type="text" placeholder="검열 단어")
+            label 검열 단어
+          .col.s3.input-field
+            select.type
+              option(value='0' select) 문자열
+              option(value='1') 정규식
+            label 검열형태
+          .hide
+            button.removeFilter.btn-warning
+              i.fa.fa-minus-square
+              |  제거
+      <div id="test5" ng-model="hello" ng-value="start"></div>
+    script(src='src/jquery.min.js')
+    script(src='src/materialize.min.js')
+    script(src='src/nouislider.js')
+    script(src='src/popup.bundle.js')
