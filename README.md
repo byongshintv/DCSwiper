@@ -1,8 +1,11 @@
 # 디씨 스위퍼
-![img](./main.png)
+![img](./img/main.png)
 [디씨인사이드](https://www.dcinside.com/) 마이너갤러리의 관리 보조용 크롬 확장 프로그램입니다.
 
 잦은 도배글이나 어그로성 게시글을 쉽게 삭제할 수 있도록 도와주는 마이너갤러리 운영자용 확장 스크립트입니다.
+
+## 다운로드 위치
+* [크롬 웹 스토어](https://chrome.google.com/webstore/detail/lpahimgbjeopgkgndabeccdmcokfmlfd/publish-accepted?hl=ko&authuser=1)
 
 ## 메인 기능 사용방법
 ![img](http://i.imgur.com/XMZUEUu.gif)
