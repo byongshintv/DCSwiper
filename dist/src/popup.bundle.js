@@ -348,10 +348,6 @@ class OtherGUI {
         this.$removeLimitCount = $("#removeLimitCount");
         this._initEventListener();
     }
-    printExportData(dbData) {
-        const textData = JSON.stringify(dbData);
-        $("#exportData").html(textData);
-    }
     /**
      * 이벤트 정의
      */
@@ -388,12 +384,25 @@ class OtherGUI {
         $([$refreshInterval, $removeLimitCount])
             .val(0)
             .trigger("input");
+        // 복사버튼
+        $("#exportDataCopy").on("click", () => {
+            this.copyExportData();
+        });
         /**
          * materiallize에서 제공되는 기본 이벤트 정의
          */
         //사이드 네비게이션
         $("#sideNav").sidenav();
         $('.collapsible').collapsible();
+    }
+    printExportData(dbData) {
+        const textData = JSON.stringify(dbData);
+        $("#exportData").html(textData);
+    }
+    copyExportData() {
+        $("#exportData").select();
+        document.execCommand("copy");
+        M.toast({ "html": "성공적으로 복사되었습니다." });
     }
     getSettingJSON() {
         let autoRefresh = undefined;
@@ -492,7 +501,7 @@ $("#wrap").on("change input", function (fn) {
     logger.debug("change input 이벤트 발생, 데이터 저장 시도", fn);
     saveData();
 });
-$("#sideNav").on("mouseup", function (fn) {
+$("#settings").on("mouseup", function (fn) {
     logger.debug("sidenav click 이벤트 발생, 데이터 저장 시도", fn);
     saveData();
 });
