@@ -17,7 +17,7 @@
  
 ## 설치
 ### 크롬 웹스토어 다운로드
-<a href="https://chrome.google.com/webstore/detail/lpahimgbjeopgkgndabeccdmcokfmlfd/publish-accepted?hl=ko&authuser=1">
+<a href="https://chrome.google.com/webstore/detail/dcswiper/lpahimgbjeopgkgndabeccdmcokfmlfd?hl=ko&authuser=1">
     <img src="./img/download_link.png" title="크롬 웹스토어 다운로드 링크" style="border:3px solid #fff;box-shadow:0px 2px 1px rgba(0,0,0,0.3);"/>
 </a>
 
