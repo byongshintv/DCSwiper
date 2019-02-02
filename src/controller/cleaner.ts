@@ -72,7 +72,7 @@ class Cleaner {
     }
 
     isLimitCountOver(removeNode: RemoveNode[]){
-        if(this._allDatas.setting.removeLimit === undefined) return false
+        if(this._allDatas.setting.removeLimit === null) return false
         return removeNode.length >= this._allDatas.setting.removeLimit;
     }
     /**

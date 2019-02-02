@@ -7,6 +7,7 @@
 ## 다운로드 위치
 * [크롬 웹 스토어](https://chrome.google.com/webstore/detail/lpahimgbjeopgkgndabeccdmcokfmlfd/publish-accepted?hl=ko&authuser=1)
 
+
 ## 메인 기능 사용방법
 ![img](http://i.imgur.com/XMZUEUu.gif)
 1. 분홍색 갤러리 id 입력칸에 갤러리 id를 입력합니다. (중갤이면 aoegame, 돌갤이면 pebble)
@@ -19,7 +20,6 @@
 노드와 노드사이는 OR 게이트의 관계를 갖고 조건과 조건은 AND 게이트의 관계를 갖습니다.
 
 닉에 박정희가 들어가면서 제목에 전라도가 붙은 게시물을 차단하고 싶은 경우 같은 노드에 두개의 조건을 추가하면 됩니다.
-
 
 ## 설정에 대한 설명
 ![설정](https://i.imgur.com/UWlNl00.png)

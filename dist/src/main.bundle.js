@@ -148,7 +148,7 @@ class Cleaner {
         return removeNodes;
     }
     isLimitCountOver(removeNode) {
-        if (this._allDatas.setting.removeLimit === undefined)
+        if (this._allDatas.setting.removeLimit === null)
             return false;
         return removeNode.length >= this._allDatas.setting.removeLimit;
     }
@@ -397,10 +397,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const DCBoard_1 = __importDefault(__webpack_require__(/*! ./model/DCBoard */ "./src/model/DCBoard.ts"));
-const DBDataModel_1 = __importDefault(__webpack_require__(/*! ./model/DBDataModel */ "./src/model/DBDataModel.ts"));
 const cleanerGUI_1 = __importDefault(__webpack_require__(/*! ./controller/cleanerGUI */ "./src/controller/cleanerGUI.ts"));
 const cleaner_1 = __importDefault(__webpack_require__(/*! ./controller/cleaner */ "./src/controller/cleaner.ts"));
 const logger_1 = __importDefault(__webpack_require__(/*! ./utils/logger */ "./src/utils/logger.js"));
+const ChromeCtoargeBridge_1 = __importDefault(__webpack_require__(/*! ./model/ChromeCtoargeBridge */ "./src/model/ChromeCtoargeBridge.ts"));
 const logger = logger_1.default;
 logger.useDefaults({
     defaultLevel: logger_1.default.DEBUG,
@@ -409,77 +409,67 @@ logger.useDefaults({
     }
 });
 function onGalleryLoad() {
-    const dataModel = new DBDataModel_1.default();
-    dataModel.loadData()
-        .then((datas) => {
+    function callback(datas) {
         const dcBoard = new DCBoard_1.default();
         const gui = new cleanerGUI_1.default(datas, logger);
         const cleaner = new cleaner_1.default(dcBoard, datas, gui, logger);
         const result = cleaner.start();
         gui.doAlert(result);
+        const autoRefresh = datas.setting.autoRefresh;
         //재시작
-        if (datas.setting.autoRefresh !== undefined)
+        if (autoRefresh !== null)
             setTimeout(() => {
                 location = location;
-            }, datas.setting.autoRefresh * 10);
-    });
+            }, autoRefresh * 10);
+    }
+    const galleryID = new URL(location.href).searchParams.get("id");
+    new ChromeCtoargeBridge_1.default().load(galleryID, callback);
 }
 onGalleryLoad();
 
 
 /***/ }),
 
-/***/ "./src/model/DBDataModel.ts":
-/*!**********************************!*\
-  !*** ./src/model/DBDataModel.ts ***!
-  \**********************************/
+/***/ "./src/model/ChromeCtoargeBridge.ts":
+/*!******************************************!*\
+  !*** ./src/model/ChromeCtoargeBridge.ts ***!
+  \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-class DBDataModel {
-    constructor() {
-        this._databaseName = "Swiper" + "_" + new URL(location.href).searchParams.get("id");
-        this._defaultForm = {
-            dbs: []
-        };
+const getDefaultDBData_1 = __importDefault(__webpack_require__(/*! ../utils/getDefaultDBData */ "./src/utils/getDefaultDBData.ts"));
+const dbDataVersionUpdate_1 = __importDefault(__webpack_require__(/*! ../utils/dbDataVersionUpdate */ "./src/utils/dbDataVersionUpdate.ts"));
+const logger_1 = __importDefault(__webpack_require__(/*! ../utils/logger */ "./src/utils/logger.js"));
+class ChromeStorageBridge {
+    constructor(logger = logger_1.default) {
+        this._logger = logger;
     }
-    loadData() {
-        const promise = new Promise((res, rej) => this._hasNotData(res)).then((hasNotData) => new Promise((res) => {
-            if (hasNotData)
-                this._createNewData(res);
-            else
-                res();
-        })).then(() => new Promise((res) => {
-            this._loadData(res);
-        })).then((result) => new Promise((res) => {
-            res(result);
-        }));
-        return promise;
-    }
-    _createNewData(resolve) {
-        chrome.storage.sync.set({ [this._databaseName]: this._defaultForm }, () => {
-            resolve();
+    set(dbData, galleryID, callback = () => { }) {
+        const debugID = "id : " + Math.floor(Math.random() * 50000);
+        this._logger.debug("데이터 저장 시도", debugID, dbData, galleryID);
+        chrome.storage.sync.set({ ["Swiper_" + galleryID]: dbData }, () => {
+            logger_1.default.debug("데이터 저장 성공", debugID);
+            callback();
         });
     }
-    _loadData(resolve) {
-        const databaseName = this._databaseName;
-        chrome.storage.sync.get(this._databaseName, (result) => {
-            resolve(result[databaseName]);
-        });
-    }
-    _hasNotData(resolve) {
-        const databaseName = this._databaseName;
-        new Promise((res) => {
-            this._loadData(res);
-        }).then(result => {
-            resolve(result == undefined);
+    load(galleryID, callback) {
+        var galleryID = "Swiper_" + galleryID;
+        chrome.storage.sync.get(galleryID, (result) => {
+            let dbData = result[galleryID];
+            if (dbData == undefined)
+                dbData = getDefaultDBData_1.default();
+            dbData = dbDataVersionUpdate_1.default(dbData);
+            callback(dbData);
         });
     }
 }
-exports.default = DBDataModel;
+exports.default = ChromeStorageBridge;
 
 
 /***/ }),
@@ -622,6 +612,84 @@ class DCBoard {
     }
 }
 exports.default = DCBoard;
+
+
+/***/ }),
+
+/***/ "./src/utils/dbDataVersionUpdate.ts":
+/*!******************************************!*\
+  !*** ./src/utils/dbDataVersionUpdate.ts ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const getDefaultDBData_1 = __importDefault(__webpack_require__(/*! ./getDefaultDBData */ "./src/utils/getDefaultDBData.ts"));
+function singleUpgrade(data) {
+    data.version += "";
+    switch (data.version) {
+        case "0.5":
+        case "0.5.1":
+            data.version = "0.5.2";
+            if (data.setting.autoRefresh == undefined)
+                data.setting.autoRefresh = null;
+            if (data.setting.removeLimit == undefined)
+                data.setting.removeLimit = null;
+            break;
+    }
+    return data;
+}
+function dbDataVersionUpgrade(data) {
+    const nowVersion = data.version;
+    data = singleUpgrade(data);
+    const upgradedVersion = data.version;
+    const newVersion = getDefaultDBData_1.default().version;
+    // 최신버전으로 업그레이드가 완료된 경우
+    if (nowVersion === upgradedVersion) {
+        return data;
+    }
+    // 버전이 올라갔으나 아직 최신버전이 아닌 경우
+    if (nowVersion !== upgradedVersion && upgradedVersion !== newVersion) {
+        return dbDataVersionUpgrade(data);
+    }
+    // 버전이 올라가지 않고 최신버전이 아닌 경우
+    if (nowVersion === upgradedVersion && nowVersion !== newVersion) {
+        console.error("db데이터의 버전 업그레이드 지원 필요");
+        return data;
+    }
+    return data;
+}
+exports.default = dbDataVersionUpgrade;
+
+
+/***/ }),
+
+/***/ "./src/utils/getDefaultDBData.ts":
+/*!***************************************!*\
+  !*** ./src/utils/getDefaultDBData.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function getDefaultData() {
+    return {
+        dbs: [],
+        setting: {
+            autoRefresh: null,
+            removeLimit: 10
+        },
+        version: "0.5.2"
+    };
+}
+exports.default = getDefaultData;
 
 
 /***/ }),

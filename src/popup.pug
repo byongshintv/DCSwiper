@@ -17,7 +17,7 @@ html(lang='en')
         ul.collapsible.collapsible-accordion
           li.bold.active
             a.collapsible-header.waves-effect.waves-teal 설정
-            .collapsible-body
+            .collapsible-body#settings
               ul
                 li 
                   a 
@@ -42,14 +42,14 @@ html(lang='en')
             .collapsible-body
               .row
                 .absolute-btn-wrapper
-                  a.waves-effect.waves-light.btn
+                  a#importDataLoad.waves-effect.waves-light.btn
                     i.material-icons.left save
                     | 저장
                 .col.s12.input-field
                   textarea#importData.materialize-textarea
                   label(for="importData") 내보내기에서 복사한 코드를 붙여넣어주세요
           li.bold
-            a.collapsible-header.waves-effect.waves-teal 설정 내보내기(개발중)
+            a.collapsible-header.waves-effect.waves-teal 설정 내보내기
             .collapsible-body
               .row
                 .absolute-btn-wrapper

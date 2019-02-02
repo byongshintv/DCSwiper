@@ -3,13 +3,13 @@
 */
 interface DBData {
     dbs: Array<DBData_dbs>
-    version: 0.5,
+    version: string,
     setting: SettingData
 }
 
 interface SettingData {
-    autoRefresh: undefined|number,
-    removeLimit: undefined|number
+    autoRefresh: null|number,
+    removeLimit: null|number
 }
 
 interface DBData_dbs {

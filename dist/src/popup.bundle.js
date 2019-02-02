@@ -114,6 +114,50 @@ exports.DBDATA_CONDITIONTYPE = DBDATA_CONDITIONTYPE;
 
 /***/ }),
 
+/***/ "./src/model/ChromeCtoargeBridge.ts":
+/*!******************************************!*\
+  !*** ./src/model/ChromeCtoargeBridge.ts ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const getDefaultDBData_1 = __importDefault(__webpack_require__(/*! ../utils/getDefaultDBData */ "./src/utils/getDefaultDBData.ts"));
+const dbDataVersionUpdate_1 = __importDefault(__webpack_require__(/*! ../utils/dbDataVersionUpdate */ "./src/utils/dbDataVersionUpdate.ts"));
+const logger_1 = __importDefault(__webpack_require__(/*! ../utils/logger */ "./src/utils/logger.js"));
+class ChromeStorageBridge {
+    constructor(logger = logger_1.default) {
+        this._logger = logger;
+    }
+    set(dbData, galleryID, callback = () => { }) {
+        const debugID = "id : " + Math.floor(Math.random() * 50000);
+        this._logger.debug("데이터 저장 시도", debugID, dbData, galleryID);
+        chrome.storage.sync.set({ ["Swiper_" + galleryID]: dbData }, () => {
+            logger_1.default.debug("데이터 저장 성공", debugID);
+            callback();
+        });
+    }
+    load(galleryID, callback) {
+        var galleryID = "Swiper_" + galleryID;
+        chrome.storage.sync.get(galleryID, (result) => {
+            let dbData = result[galleryID];
+            if (dbData == undefined)
+                dbData = getDefaultDBData_1.default();
+            dbData = dbDataVersionUpdate_1.default(dbData);
+            callback(dbData);
+        });
+    }
+}
+exports.default = ChromeStorageBridge;
+
+
+/***/ }),
+
 /***/ "./src/popup.ts":
 /*!**********************!*\
   !*** ./src/popup.ts ***!
@@ -129,24 +173,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const DBData_1 = __webpack_require__(/*! ./interface/DBData */ "./src/interface/DBData.ts");
 const logger_1 = __importDefault(__webpack_require__(/*! ./utils/logger */ "./src/utils/logger.js"));
-function isValidRegExp(string) {
-    try {
-        new RegExp(string);
-    }
-    catch (_a) {
-        return false;
-    }
-    return true;
-}
+const IsValidRegExp_1 = __importDefault(__webpack_require__(/*! ./utils/IsValidRegExp */ "./src/utils/IsValidRegExp.ts"));
+const textToDBData_1 = __importDefault(__webpack_require__(/*! ./utils/textToDBData */ "./src/utils/textToDBData.ts"));
+const getDefaultDBData_1 = __importDefault(__webpack_require__(/*! ./utils/getDefaultDBData */ "./src/utils/getDefaultDBData.ts"));
+const ChromeCtoargeBridge_1 = __importDefault(__webpack_require__(/*! ./model/ChromeCtoargeBridge */ "./src/model/ChromeCtoargeBridge.ts"));
 class BodyGUI {
-    showMessage(message) {
-        $(".hide.message")
-            .clone().appendTo("body").removeClass("hide").css("display", "hide")
-            .html(message)
-            .fadeIn().delay(2000).fadeOut(function () {
-            $(this).remove();
-        });
-    }
     _resetNumbering() {
         $(".filterItem").not(".hide").each((i, self) => {
             $(self).find(".titleWrap > span").html("#" + i);
@@ -251,7 +282,7 @@ class BodyGUI {
             const inputval = $input.val();
             const $type = $(this).closest(".condition").find(".type");
             let tooltipInstance = M.Tooltip.getInstance($input[0]);
-            let isValid = isValidRegExp(inputval);
+            let isValid = IsValidRegExp_1.default(inputval);
             // 남아있는 tooltip intance 삭제
             if (tooltipInstance !== undefined) {
                 tooltipInstance.destroy();
@@ -346,12 +377,12 @@ class OtherGUI {
     constructor() {
         this.$refreshInterval = $("#refreshInterval");
         this.$removeLimitCount = $("#removeLimitCount");
-        this._initEventListener();
+        this._bindEventListener();
     }
     /**
      * 이벤트 정의
      */
-    _initEventListener() {
+    _bindEventListener() {
         const { $refreshInterval, $removeLimitCount } = this;
         /**
          * 자동 새로고침의 여부, 간격 설정
@@ -388,6 +419,17 @@ class OtherGUI {
         $("#exportDataCopy").on("click", () => {
             this.copyExportData();
         });
+        // 데이터 로드 버튼#importDataLoad #importData
+        $("#importDataLoad").on("click", function () {
+            const loadedData = $("#importData").html();
+            const dbData = textToDBData_1.default(loadedData);
+            if (dbData === null) {
+                M.toast({ html: "올바르지 않은 검열 데이터입니다" });
+                return;
+            }
+            loadData(dbData);
+            saveData();
+        });
         /**
          * materiallize에서 제공되는 기본 이벤트 정의
          */
@@ -405,8 +447,8 @@ class OtherGUI {
         M.toast({ "html": "성공적으로 복사되었습니다." });
     }
     getSettingJSON() {
-        let autoRefresh = undefined;
-        let removeLimit = undefined;
+        let autoRefresh = null;
+        let removeLimit = null;
         if ($("#refreshIntervalDescript .value").length !== 0)
             autoRefresh = $("#refreshInterval").val();
         if ($("#removeLimitCount .value").length !== 0)
@@ -425,20 +467,6 @@ class OtherGUI {
         $removeLimitCount.val(removeLimit).trigger("input");
     }
 }
-class ChromeStorageBridge {
-    set(dbData, galleryID, callback = () => { }) {
-        const debugID = "id : " + Math.floor(Math.random() * 50000);
-        logger.debug("데이터 저장 시도", debugID, dbData, galleryID);
-        chrome.storage.sync.set({ ["Swiper_" + galleryID]: dbData }, () => {
-            logger.debug("데이터 저장 성공", debugID);
-            callback();
-        });
-    }
-    load(galleryID, callback) {
-    }
-}
-const chromeStorageBridge = new ChromeStorageBridge();
-const otherGUI = new OtherGUI();
 const logger = logger_1.default;
 logger.useDefaults({
     defaultLevel: logger_1.default.DEBUG,
@@ -446,16 +474,8 @@ logger.useDefaults({
         messages.unshift(new Date().toUTCString());
     }
 });
-function getDefaultData() {
-    return {
-        dbs: [],
-        setting: {
-            autoRefresh: undefined,
-            removeLimit: 10
-        },
-        version: 0.5
-    };
-}
+const chromeStorageBridge = new ChromeCtoargeBridge_1.default(logger);
+const otherGUI = new OtherGUI();
 let isEnableSave = true;
 function saveData() {
     // loadData 함수 실행중일경우 종료
@@ -464,26 +484,27 @@ function saveData() {
     const dbData = {
         dbs: bodyGUI.toJSON(),
         setting: otherGUI.getSettingJSON(),
-        version: 0.5
+        version: getDefaultDBData_1.default().version
     };
     otherGUI.printExportData(dbData);
     const galleryID = $("#search").val();
     chromeStorageBridge.set(dbData, galleryID);
 }
+function loadData(dbData) {
+    isEnableSave = false;
+    bodyGUI.setNodes(dbData.dbs);
+    otherGUI.setSetting(dbData.setting);
+    isEnableSave = true;
+}
 // 노드 추가
 $("#addNode").click(bodyGUI.addNode.bind(bodyGUI));
 // 검색기능
 $("#search").keyup((e) => {
-    isEnableSave = false;
-    var galleryID = "Swiper_" + $("#search").val();
-    chrome.storage.sync.get(galleryID, function (result) {
-        let dbData = result[galleryID];
-        if (dbData == undefined)
-            dbData = getDefaultData();
-        bodyGUI.setNodes(dbData.dbs);
-        otherGUI.setSetting(dbData.setting);
-        isEnableSave = true;
-    });
+    function callback(dbData) {
+        loadData(dbData);
+    }
+    const galleryID = $("#search").val();
+    chromeStorageBridge.load(galleryID, callback);
 });
 //세부요소 삭제시 자동 세이브 기능 탑재
 $("#wrap").on("DOMNodeRemoved", (fn) => {
@@ -505,6 +526,108 @@ $("#settings").on("mouseup", function (fn) {
     logger.debug("sidenav click 이벤트 발생, 데이터 저장 시도", fn);
     saveData();
 });
+
+
+/***/ }),
+
+/***/ "./src/utils/IsValidRegExp.ts":
+/*!************************************!*\
+  !*** ./src/utils/IsValidRegExp.ts ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function isValidRegExp(string) {
+    try {
+        new RegExp(string);
+    }
+    catch (_a) {
+        return false;
+    }
+    return true;
+}
+exports.default = isValidRegExp;
+
+
+/***/ }),
+
+/***/ "./src/utils/dbDataVersionUpdate.ts":
+/*!******************************************!*\
+  !*** ./src/utils/dbDataVersionUpdate.ts ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const getDefaultDBData_1 = __importDefault(__webpack_require__(/*! ./getDefaultDBData */ "./src/utils/getDefaultDBData.ts"));
+function singleUpgrade(data) {
+    data.version += "";
+    switch (data.version) {
+        case "0.5":
+        case "0.5.1":
+            data.version = "0.5.2";
+            if (data.setting.autoRefresh == undefined)
+                data.setting.autoRefresh = null;
+            if (data.setting.removeLimit == undefined)
+                data.setting.removeLimit = null;
+            break;
+    }
+    return data;
+}
+function dbDataVersionUpgrade(data) {
+    const nowVersion = data.version;
+    data = singleUpgrade(data);
+    const upgradedVersion = data.version;
+    const newVersion = getDefaultDBData_1.default().version;
+    // 최신버전으로 업그레이드가 완료된 경우
+    if (nowVersion === upgradedVersion) {
+        return data;
+    }
+    // 버전이 올라갔으나 아직 최신버전이 아닌 경우
+    if (nowVersion !== upgradedVersion && upgradedVersion !== newVersion) {
+        return dbDataVersionUpgrade(data);
+    }
+    // 버전이 올라가지 않고 최신버전이 아닌 경우
+    if (nowVersion === upgradedVersion && nowVersion !== newVersion) {
+        console.error("db데이터의 버전 업그레이드 지원 필요");
+        return data;
+    }
+    return data;
+}
+exports.default = dbDataVersionUpgrade;
+
+
+/***/ }),
+
+/***/ "./src/utils/getDefaultDBData.ts":
+/*!***************************************!*\
+  !*** ./src/utils/getDefaultDBData.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function getDefaultData() {
+    return {
+        dbs: [],
+        setting: {
+            autoRefresh: null,
+            removeLimit: 10
+        },
+        version: "0.5.2"
+    };
+}
+exports.default = getDefaultData;
 
 
 /***/ }),
@@ -785,6 +908,45 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	}
 	else {}
 }(this));
+
+
+/***/ }),
+
+/***/ "./src/utils/textToDBData.ts":
+/*!***********************************!*\
+  !*** ./src/utils/textToDBData.ts ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function textToDBData(textData) {
+    try {
+        // 올바르지 않은 json형식일 경우 syntaxError 반환
+        const convertedData = JSON.parse(textData);
+        const { dbs, setting, version } = convertedData;
+        return {
+            dbs: dbs.map(({ condition, isRemove, block }) => {
+                return {
+                    condition,
+                    isRemove,
+                    block
+                };
+            }),
+            setting: {
+                autoRefresh: setting.autoRefresh || null,
+                removeLimit: setting.removeLimit || null,
+            },
+            version: convertedData.version
+        };
+    }
+    catch (SyntaxError) {
+        return null;
+    }
+}
+exports.default = textToDBData;
 
 
 /***/ })

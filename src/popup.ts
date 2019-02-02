@@ -1,26 +1,14 @@
 import { DBData_dbs, DBData_condition, SettingData,
     DBDATA_CONDITIONTYPE, DBDATA_CONDITIONTARGET, DBData } from "./interface/DBData";
 import Logger from './utils/logger';
+import isValidRegExp from './utils/IsValidRegExp';
+import textToDBData from "./utils/textToDBData";
+import getDefaultData from "./utils/getDefaultDBData";
+import dbDataVersionUpgrade from "./utils/dbDataVersionUpdate";
+import ChromeStorageBridge from "./model/ChromeCtoargeBridge";
 
-function isValidRegExp( string:string ):boolean{
-    try{ 
-        new RegExp(string) 
-    } catch { 
-        return false 
-    }
-    return true
-}
 
 class BodyGUI{
-    showMessage(message:string){
-        $(".hide.message")
-        .clone().appendTo("body").removeClass("hide").css("display","hide")
-        .html(message)
-        .fadeIn().delay(2000).fadeOut(function(this:HTMLElement){
-            $(this).remove()
-        })
-    }
-
     private _resetNumbering(){
         $(".filterItem").not(".hide").each((i,self) => {
             $(self).find(".titleWrap > span").html("#" + i)
@@ -254,13 +242,13 @@ class OtherGUI{
     private $refreshInterval = $("#refreshInterval")
     private $removeLimitCount = $("#removeLimitCount")
     constructor(){
-        this._initEventListener();
+        this._bindEventListener();
     }
 
     /**
      * 이벤트 정의
      */
-    private _initEventListener(){
+    private _bindEventListener(){
         const { $refreshInterval, $removeLimitCount } = this
         /**
          * 자동 새로고침의 여부, 간격 설정
@@ -303,6 +291,21 @@ class OtherGUI{
             this.copyExportData()
         })
 
+        // 데이터 로드 버튼#importDataLoad #importData
+        $("#importDataLoad").on("click",function(){
+            const loadedData: string = $("#importData").html()
+            const dbData: DBData | null = textToDBData(loadedData)
+            if(dbData === null ){
+                M.toast({html: "올바르지 않은 검열 데이터입니다"})
+                return;
+            }
+            loadData(dbData)
+            saveData()
+            
+
+        })
+
+
         /**
          * materiallize에서 제공되는 기본 이벤트 정의
          */
@@ -323,8 +326,8 @@ class OtherGUI{
     }
 
     public getSettingJSON():SettingData{
-        let autoRefresh:undefined|number = undefined
-        let removeLimit: undefined|number = undefined
+        let autoRefresh:null|number = null
+        let removeLimit: null|number = null
 
 
         if($("#refreshIntervalDescript .value").length !== 0) 
@@ -352,26 +355,6 @@ class OtherGUI{
 
 }
 
-class ChromeStorageBridge{
-    set(dbData:DBData, galleryID:string, callback:() => void = () => {}){
-        const debugID = "id : " + Math.floor(Math.random() * 50000)
-
-        logger.debug("데이터 저장 시도",debugID,dbData,galleryID)
-        chrome.storage.sync.set({["Swiper_"+ galleryID]:dbData},() => {
-            logger.debug("데이터 저장 성공",debugID)
-            callback()
-    
-        });
-    }
-
-    load(galleryID:string, callback: () => void ){
-
-    }
-}
-
-const chromeStorageBridge = new ChromeStorageBridge()
-
-const otherGUI = new OtherGUI();
 const logger = Logger
 logger.useDefaults({
     defaultLevel: Logger.DEBUG,
@@ -380,16 +363,11 @@ logger.useDefaults({
     }
 })
 
-function getDefaultData():DBData{
-    return {
-        dbs:[],
-        setting:{
-            autoRefresh:undefined,
-            removeLimit:10
-        },
-        version:0.5
-    };
-}
+
+const chromeStorageBridge = new ChromeStorageBridge(logger)
+const otherGUI = new OtherGUI();
+
+
 
 let isEnableSave = true
 function saveData(){
@@ -398,7 +376,7 @@ function saveData(){
     const dbData:DBData = {
         dbs:bodyGUI.toJSON(),
         setting:otherGUI.getSettingJSON(),
-        version:0.5
+        version:getDefaultData().version
     };
     otherGUI.printExportData(dbData)
     
@@ -407,22 +385,26 @@ function saveData(){
 
 }
 
+function loadData(dbData:DBData){
+    isEnableSave = false
+    bodyGUI.setNodes(dbData.dbs);
+    otherGUI.setSetting(dbData.setting);
+    isEnableSave = true
+}
+
 // 노드 추가
 $("#addNode").click( bodyGUI.addNode.bind(bodyGUI) )
 
 // 검색기능
 $("#search").keyup((e) => {
-    isEnableSave = false
-    var galleryID:string = "Swiper_" + $("#search").val();
-    chrome.storage.sync.get( galleryID,function(result){
-        let dbData: DBData | undefined = result[galleryID] as any
-        if(dbData == undefined) 
-            dbData = getDefaultData();
-        bodyGUI.setNodes(dbData.dbs);
-        otherGUI.setSetting(dbData.setting);
-        isEnableSave = true
-    });
+    function callback(dbData:DBData){
 
+
+        loadData(dbData)
+    }
+
+    const galleryID:string = $("#search").val() as string;
+    chromeStorageBridge.load(galleryID,callback)
 })
 
 //세부요소 삭제시 자동 세이브 기능 탑재
