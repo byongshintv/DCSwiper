@@ -4,12 +4,14 @@
 
 잦은 도배글이나 어그로성 게시글을 쉽게 삭제할 수 있도록 도와주는 마이너갤러리 운영자용 확장 스크립트입니다.
 
-## 다운로드 위치
-* [크롬 웹 스토어](https://chrome.google.com/webstore/detail/lpahimgbjeopgkgndabeccdmcokfmlfd/publish-accepted?hl=ko&authuser=1)
+## 웹스토어 다운로드
+<a href="https://chrome.google.com/webstore/detail/lpahimgbjeopgkgndabeccdmcokfmlfd/publish-accepted?hl=ko&authuser=1">
+    <img src="./img/download_link.png" title="크롬 웹스토어 다운로드 링크" style="border:3px solid #fff;box-shadow:0px 2px 1px rgba(0,0,0,0.3);"/>
+</a>
 
 
 ## 메인 기능 사용방법
-![img](http://i.imgur.com/XMZUEUu.gif)
+![메인 기능 사용법](http://i.imgur.com/XMZUEUu.gif)
 1. 분홍색 갤러리 id 입력칸에 갤러리 id를 입력합니다. (중갤이면 aoegame, 돌갤이면 pebble)
 2. 노드 추가를 누릅니다.
 3. 차단할 단어 혹은 정규식을 지정합니다.
