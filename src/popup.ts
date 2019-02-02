@@ -4,7 +4,6 @@ import Logger from './utils/logger';
 import isValidRegExp from './utils/IsValidRegExp';
 import textToDBData from "./utils/textToDBData";
 import getDefaultData from "./utils/getDefaultDBData";
-import dbDataVersionUpgrade from "./utils/dbDataVersionUpdate";
 import ChromeStorageBridge from "./model/ChromeCtoargeBridge";
 
 
@@ -293,7 +292,7 @@ class OtherGUI{
 
         // 데이터 로드 버튼#importDataLoad #importData
         $("#importDataLoad").on("click",function(){
-            const loadedData: string = $("#importData").html()
+            const loadedData: string = $("#importData").val() as string
             const dbData: DBData | null = textToDBData(loadedData)
             if(dbData === null ){
                 M.toast({html: "올바르지 않은 검열 데이터입니다"})
@@ -390,6 +389,8 @@ function loadData(dbData:DBData){
     bodyGUI.setNodes(dbData.dbs);
     otherGUI.setSetting(dbData.setting);
     isEnableSave = true
+
+    otherGUI.printExportData(dbData);
 }
 
 // 노드 추가

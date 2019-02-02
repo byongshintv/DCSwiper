@@ -1,6 +1,5 @@
 import { DBData } from './interface/DBData'
 import DCBoard from './model/DCBoard'
-import DBDataModel from './model/DBDataModel';
 import CleanerGUI from './controller/cleanerGUI';
 import Cleaner from './controller/cleaner';
 import Logger from './utils/logger';

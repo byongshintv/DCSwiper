@@ -421,7 +421,7 @@ class OtherGUI {
         });
         // 데이터 로드 버튼#importDataLoad #importData
         $("#importDataLoad").on("click", function () {
-            const loadedData = $("#importData").html();
+            const loadedData = $("#importData").val();
             const dbData = textToDBData_1.default(loadedData);
             if (dbData === null) {
                 M.toast({ html: "올바르지 않은 검열 데이터입니다" });
@@ -495,6 +495,7 @@ function loadData(dbData) {
     bodyGUI.setNodes(dbData.dbs);
     otherGUI.setSetting(dbData.setting);
     isEnableSave = true;
+    otherGUI.printExportData(dbData);
 }
 // 노드 추가
 $("#addNode").click(bodyGUI.addNode.bind(bodyGUI));
