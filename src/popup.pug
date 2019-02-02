@@ -6,7 +6,7 @@ html(lang='en')
     link(rel='stylesheet', href='src/materialize.min.css')
     link(rel='stylesheet', href='src/popup.css')    
 
-    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+    link(rel='stylesheet', href='https://use.fontawesome.com/releases/v5.7.1/css/all.css')
     meta(charset='UTF-8')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     meta(http-equiv='X-UA-Compatible', content='ie=edge')
@@ -63,6 +63,15 @@ html(lang='en')
                 .col.s12.input-field
                   textarea#exportData.materialize-textarea
                   label(for="exportData") 데이터 방출 코드
+          li.bold#linkList
+            .row
+              a.linkYoutube.s4.col.tooltipped(data-position="bottom" data-tooltip="병신TV 유튜브" href="https://www.youtube.com/channel/UCfEINqRuImepT9g9RWymwag")
+                i.fab.fa-youtube
+              a.linkGithub.s4.col.tooltipped(data-position="bottom" data-tooltip="디씨 스위퍼 깃허브" href="https://github.com/byongshintv/DCSwiper")
+                i.fab.fa-github
+              a.linkMail.s4.col.tooltipped(data-position="bottom" data-tooltip="개발자 갤로그" href="http://gallog.dcinside.com/rnaos1234/guestbook")
+                i.fas.fa-envelope
+              
     main
       nav
         .nav-wrapper

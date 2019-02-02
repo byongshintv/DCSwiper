@@ -310,9 +310,13 @@ class OtherGUI{
             loadData(dbData)
             saveData()
             M.toast({html: "성공적으로 데이터를 불러왔습니다."})
-
         })
 
+        // 웹사이트 링크 클릭시 링크 이동
+        $("#linkList a").on("click",function(){
+            const url:string = $(this).attr("href") as string;
+            chrome.tabs.update({ url });
+        })
 
         /**
          * materiallize에서 제공되는 기본 이벤트 정의
@@ -320,6 +324,9 @@ class OtherGUI{
         //사이드 네비게이션
         $("#sideNav").sidenav();
         $('.collapsible').collapsible();
+        $('.tooltipped').tooltip({
+
+        });
     }
 
     public printExportData(dbData: DBData): void {

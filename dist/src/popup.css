@@ -115,6 +115,22 @@ main .nav-wrapper{
     top:-1em;
 }
 
+.sidenav #linkList a{
+    text-align:center;
+    margin-top:0.8em;
+}
+
+.sidenav #linkList a i{
+    font-size: 3em;
+    color: #bbb;
+    transition:0.2s all;
+    text-shadow:0px 2px 1px rgba(0,0,0,0.1);
+}
+
+.sidenav #linkList a i:hover{
+    color: #999;
+}
+
 #search:not(:focus){
     color: #fff
 }
