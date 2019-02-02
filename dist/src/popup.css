@@ -101,6 +101,10 @@ main .nav-wrapper{
     top:-1em;
 }
 
+#search:not(:focus){
+    color: #fff
+}
+
 #addNode{
     width:100%;
     height:6em;

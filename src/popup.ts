@@ -264,6 +264,15 @@ class OtherGUI{
                     `자동 새로고침 간격 <span class="value">${value}</span>초`
                 $(`#${id}Descript`).html(message)
             })
+            .on("mouseup",function(){
+                //경고 메세지
+                const $this = $(this);
+                let value:number = parseInt( $(this).val() as string ) / 100 ;
+                const waringMessage= `<i class="material-icons left">warning</i> 짧은 간격의 새로고침을 반복할 경우 갤러리가 삭제될 수 있습니다.`
+                if(value < 5)
+                    M.toast({html:waringMessage})
+                
+            })
 
         /**
          * 최대 삭제갯수 제한 설정
@@ -300,7 +309,7 @@ class OtherGUI{
             }
             loadData(dbData)
             saveData()
-            
+            M.toast({html: "성공적으로 데이터를 불러왔습니다."})
 
         })
 
