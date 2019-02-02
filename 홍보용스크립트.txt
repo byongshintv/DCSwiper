@@ -1,0 +1,26 @@
+
+switch(location.pathname.substr(0,4)){
+case "/wri":
+$("#subject").val("마갤 갤관리 크롬 확장 툴을 만들었습니다")
+$("#textBox").html(`<div style="padding-top: 2px; padding-bottom: 2px; color: rgb(0, 0, 0);"><img src="http://dcimg6.dcinside.co.kr/viewimage.php?no=24b0d769e1d32ca73cee85fa11d02831fb456630640f875b0a4c706b466206c88d02052af58594ba19bd4fe6710c66636c3f745e1aa1143ee662ae01f354d888657dd8431f265511" alt="viewimage.php?no=24b0d769e1d32ca73cee85fa11d02831fb456630640f875b0a4c706b466206c88d02052af58594ba19bd4fe6710c66636c3f745e1aa1143ee662ae01f354d888657dd8431f265511" style="display: block; vertical-align: top; max-width: 100%; max-height: 100%; width: auto !important; height: auto !important;"></div><br style="color: rgb(0, 0, 0);"><div style="padding-top: 2px; padding-bottom: 2px; color: rgb(0, 0, 0);"><img src="http://dcimg8.dcinside.co.kr/viewimage.php?id=39aad932f1d72a&amp;no=24b0d769e1d32ca73cee85fa11d02831fb456630640f875b0a4c706b466306d06556ce77db29a6b9e19a317f06bbd795ed80092a16335815084531712781d3c18ec465a9e7872fafebe84761627e0486c5dc2c56680ba68072eda7222eef2318fcd817" style="display: block; vertical-align: top; max-width: 100%; max-height: 100%; width: auto !important; height: auto !important;"></div><br style="color: rgb(0, 0, 0);"><div style="padding-top: 2px; padding-bottom: 2px; color: rgb(0, 0, 0);">잘부탁드려용<br><br>https://github.com/byongshintv/DCSwiper</div>`+ "_".repeat(Math.random() * 10))
+write_submit();
+break;
+case "/boa":
+let data = localStorage.getItem("temp");
+if(data === null){
+    localStorage.setItem("temp",`["mnet_k","vespa","dbz_dokkan_battle","ulfric","joyuri","aoegame","wannaonego","charlotte","315pro","sakura0319","gfl2","laikuanlin","euca","tottenham","gwent","girlgroup","twitter","war","otokonokozuma","laptop","pebble","fromsoftware","jihyo","manjuugame","teamseoulowl","kawai3","ehfhtl","jungyeon","onepieceblood","naamin","blnovel","kimjaehwan","ktsports","maplereboot","2d_fightgame","jcharacter","japtrainee","ultimateschool","longzhugaming","redvelvetreveluv","epicseven","bang_dream","youtube","su","baseballh2","nintendoswitch","jusik","anothereden","yugioh","hanbam","theaterdays","sls","endless7days","sdorica","electricguitar","parkwoojin","real__izo","gotoyome","mechanicalkeyboard","josealdo","fromis9real","vlivetreasurebox","enozicam","brawl","satominami","lastorigin","identity5","nebula","kizunaai","vleague","dbd","sktt","soulark","furry","powerlifting","coin","contents","ongsungwoo","wonyeong","vr","micateam","owgenji","sunshine","lostvikings","yabukinako","mfgo","paradox","fromis","765pro","lilyfever","browndust","grand3chase","geoneomul","anyujin","nouvellevague","hamumang","destiny","mtg","firefighter","girlsofthemonth","romance2019","netkingdom","sungrok","amanwhobecameking","combs","cleanup","topstaruback","skycastle","bjwstreet","myside","priest","2018tvn","baddetective","dramaboyfriend","redmoon_bluesun","drama109","goodtodie2018","undernineteen"]`)
+location = location
+break;
+}
+data  = JSON.parse(data)
+const nextgall = data.pop()
+localStorage.setItem("temp",JSON.stringify(data));
+
+$("#comment_memo").val("https://github.com/byongshintv/DCSwiper" + " " + "_".repeat(Math.random() * 10))
+$(".btn-comment-write").trigger("click")
+setTimeout(() => {
+    location = "http://m.dcinside.com/write/" + nextgall
+},1500)
+
+break;
+}
