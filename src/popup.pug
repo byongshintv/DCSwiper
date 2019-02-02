@@ -16,29 +16,31 @@ html(lang='en')
       ul#sideNav.sidenav
         ul.collapsible.collapsible-accordion
           li.bold.active
-            a.collapsible-header.waves-effect.waves-teal 설정
+            a.collapsible-header.waves-effect.waves-teal 
+              i.material-icons.left settings
+              | 설정
             .collapsible-body#settings
               ul
                 li 
                   a 
-                    i.icon.fa.fa-refresh
+                    i.material-icons.left refresh
                     span#refreshIntervalDescript 자동 새로고침 해제
                   .range-field
                     input(type="range" id="refreshInterval" min="0" max="6000" step="0")
                 li 
                   a 
-                    i.icon.fa.fa-refresh
+                    i.material-icons.left call_missed_outgoing
                     span#removeLimitCountDescript 최대 삭제갯수 제한 해제
                   .range-field
                     input(type="range" id="removeLimitCount" min="0" max="30" step="0")
           li.bold
-            a.collapsible-header.waves-effect.waves-teal 사용설명
-            .collapsible-body
-              p 검색창에 검열할 갤러리 id를 입력해라 (예 중갤=aoegame, 돌갤=pebble)
+            a.collapsible-header.waves-effect.waves-teal
+              i.material-icons.left view_list
+              | 삭제로그(개발중)
           li.bold
-            a.collapsible-header.waves-effect.waves-teal 삭제로그(개발중)
-          li.bold
-            a.collapsible-header.waves-effect.waves-teal 설정 불러오기
+            a.collapsible-header.waves-effect.waves-teal
+              i.material-icons.left cloud_download
+              | 설정 불러오기
             .collapsible-body
               .row
                 .absolute-btn-wrapper
@@ -49,7 +51,9 @@ html(lang='en')
                   textarea#importData.materialize-textarea
                   label(for="importData") 내보내기에서 복사한 코드를 붙여넣어주세요
           li.bold
-            a.collapsible-header.waves-effect.waves-teal 설정 내보내기
+            a.collapsible-header.waves-effect.waves-teal
+              i.material-icons.left cloud_upload
+              | 설정 내보내기
             .collapsible-body
               .row
                 .absolute-btn-wrapper
@@ -74,8 +78,8 @@ html(lang='en')
       #wrap
         .container.addNodeItem
           button#addNode
-            i.fa.fa-plus-square
-              |                 	새로운 노드 추가...
+            i.material-icons.icon add_box
+            span 새로운 노드 추가...
         #filterList.container
           .hide.card.filterItem
             .card-image.titleWrap
@@ -127,10 +131,6 @@ html(lang='en')
               option(value='0' select) 문자열
               option(value='1') 정규식
             label 검열형태
-          .hide
-            button.removeFilter.btn-warning
-              i.fa.fa-minus-square
-              |  제거
       <div id="test5" ng-model="hello" ng-value="start"></div>
     script(src='src/jquery.min.js')
     script(src='src/materialize.min.js')
