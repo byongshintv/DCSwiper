@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "파딱용 디씨글 정리툴",
   "main": "src/main.js",
-  "license": "MIT",
+  "license": "GNU General Public License",
   "devDependencies": {
     "@types/chrome": "^0.0.69",
     "@types/jquery": "^3.3.5",
