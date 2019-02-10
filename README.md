@@ -5,9 +5,11 @@
 잦은 도배글이나 어그로성 게시글을 쉽게 삭제할 수 있도록 도와주는 마이너갤러리 운영자용 확장 스크립트입니다.
 
 ## 버전 히스토리
- * **[0.5.3](./update_history/0.5.3.zip) 2019/02/02**
+ * **[0.5.3.1](https://drive.google.com/file/d/1Y4YHbNBCCjJxE-pqS0kBIFDfCGOn7c_b) 2019/02/02**
+    * 검열필터로 id를 지정할 시 화면에 보이는 모든 고정닉이 차단되는 현상을 수정하였습니다.
+ * **[0.5.3](https://drive.google.com/open?id=1DgRR7d00NybImq7T6qflpPAmZqrK6sSl) 2019/02/02**
     * 아이콘오류로 설치가 되지않는 문제를 해결하였습니다.
- * **[0.5.2](./update_history/0.5.2.zip) 2019/02/02**
+ * **[0.5.2](https://drive.google.com/open?id=1NnMkGhv2EPt4H5cZsBoy3mINNuPJI5pc) 2019/02/02**
     * 오토 새로고침 한도를 60초까지 증가하였습니다.
     * 오토 새로고침기능을 5초 미만으로 세팅할 경우 경고메세지를 출력시켰습니다.
     * 팝업 UI를 전체적으로 변경하였습니다.
