@@ -75,7 +75,7 @@ class DCBoard {
     inspect(conditions: Array<DBData_condition>): Array<BoardData> {
         const result: Array<BoardData> = [];
         this._datas.forEach(data => {
-            Logger.info(data, conditions, "조건검사")
+            //Logger.info(data, conditions, "조건검사")
             if (this._inspectSingle(data, conditions))
                 result.push(data);
         })
