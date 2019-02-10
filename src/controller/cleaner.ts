@@ -1,10 +1,10 @@
+
 import {DBData, DBData_dbs, BoardData} from '../interface/DBData'
 import {ProblemData, RemoveNode, BlockNode, CleanerResult  } from '../interface/CleanerInterface'
 
 import DCBoard from '../model/DCBoard'
 import CleanerGUI from '../controller/cleanerGUI'
 import { GlobalLogger, ILogger } from '../utils/logger'
-
 
 class Cleaner {
     _allDatas: DBData

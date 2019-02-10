@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "DCSwiper",
-    "version": "0.5.3",
+    "version": "0.5.3.1",
     "description": "디씨인싸이드 마이너갤러리 주딱 파딱용 오함마",
     "author": "병신TV",
     "short_name":"디씨 스위퍼",

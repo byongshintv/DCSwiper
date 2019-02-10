@@ -1,10 +1,5 @@
 import {DBData_condition, DBDATA_CONDITIONTARGET, DBDATA_CONDITIONTYPE, BoardData} from '../interface/DBData'
-
-const debug = {
-    message: (...m: any[]) => 123
-
-}
-
+import Logger from '../utils/logger';
 /*
     게시글 하나에 해당하는 파싱된 인터페이스
 */
@@ -49,14 +44,14 @@ class DCBoard {
     private _parseDOMToObject($dom: JQuery): BoardData[] {
         let $boardDatas = $dom.map((i, d) => {
             const getHTML = (selector: string) => $(d).find(selector).text();
-            const isLogin = $(d).find(".ip").length == 1;
+            const isLogin = $(d).find(".ip").length === 0;
             let data: BoardData = {
                 user: {
                     name: getHTML(".nickname"),
                     isLogin,
                 },
                 title: getHTML(".gall_tit a"),
-                id: parseInt( $(d).data("no") ),
+                id: parseInt( $(d).find(".gall_num").text() ),
                 $dom: $(d)
             }
 
@@ -80,7 +75,7 @@ class DCBoard {
     inspect(conditions: Array<DBData_condition>): Array<BoardData> {
         const result: Array<BoardData> = [];
         this._datas.forEach(data => {
-            debug.message(data, conditions, "조건검사")
+            Logger.info(data, conditions, "조건검사")
             if (this._inspectSingle(data, conditions))
                 result.push(data);
         })
@@ -124,15 +119,18 @@ class DCBoard {
             return regex;
         }
 
-        // 모든 조건 충족시 false 반환
         return conditions.every(condition => {
             let regex: RegExp | string = getRegex(condition);
             let value: string | null = getValue(condition.target, data);
-            debug.message(regex, value, "상세조건검사")
-
-            if (value == null) return true;
+            Logger.info(regex, value, "상세조건검사")
+            //값이 null일 경우 충족 반환
+            if (value == null) return false;
+            //검사한값이 제대로 나오지 않는 경우 충족 반환
             if (value.match(regex) != null) return true;
-            else return false;
+            
+
+            // 모든 조건 충족시 false 반환
+            return false;
         })
     }
 
