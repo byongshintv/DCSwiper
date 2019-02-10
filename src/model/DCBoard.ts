@@ -122,7 +122,7 @@ class DCBoard {
         return conditions.every(condition => {
             let regex: RegExp | string = getRegex(condition);
             let value: string | null = getValue(condition.target, data);
-            Logger.info(regex, value, "상세조건검사")
+            //Logger.debug(regex, value, "상세조건검사")
             //값이 null일 경우 충족 반환
             if (value == null) return false;
             //검사한값이 제대로 나오지 않는 경우 충족 반환
