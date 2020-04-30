@@ -21,7 +21,7 @@
     "@types/jqueryui": "^1.12.6",
     "@types/nouislider": "^9.0.4",
     "@types/wnumb": "^1.0.28",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "logger": "^0.0.1",
     "materialize-css": "^1.0.0-rc.2",
     "nouislider": "^12.1.0",
